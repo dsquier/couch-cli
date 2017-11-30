@@ -15,7 +15,7 @@ FOLDER=$1
 
 ## Validate parameters
 if [ -z $FOLDER ]; then
-    echo "Usage: load-folder [DB_NAME] [FOLDER_NAME]"
+    echo "Usage: load-folder [FOLDER_NAME]"
     exit 1
 fi
 
