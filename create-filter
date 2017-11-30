@@ -1,0 +1,22 @@
+#!/bin/bash
+
+##
+## create-filter
+##
+## Create a new CouchDB filter using HTTP API
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+FILE=$1
+
+## Validate parameters
+if [ -z $FILE ]; then
+    echo "Usage: create-filter [FILTER_FILE]"
+    exit 1
+fi
+
+## Create the filter
+curl -X PUT $URL/$DB/_design/replicateFilter -d @./$FILE

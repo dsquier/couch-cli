@@ -1,0 +1,22 @@
+#!/bin/bash
+
+##
+## create-user
+##
+## Create a new CouchDB database
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+USER=$1
+
+## Validate parameters
+if [ -z $USER ]; then
+    echo "Usage: create-user [USER_NAME]"
+    exit 1
+fi
+
+## Create user
+curl -X PUT $URL/_users/org.couchdb.user:$USER -d '{"name": "'$USER'", "password": "apple", "roles": [], "type": "user"}'

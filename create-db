@@ -1,0 +1,22 @@
+#!/bin/bash
+
+##
+## create-db
+##
+## Create a new CouchDB database
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+DB_NAME=$1
+
+## Validate parameters
+if [ -z $DB_NAME ]; then
+    echo "Usage: create-db [DB_NAME]"
+    exit 1
+fi
+
+## Create database
+curl -X PUT $URL/$DB_NAME

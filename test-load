@@ -1,0 +1,61 @@
+#!/bin/bash
+
+##
+## test-load
+##
+## Testing script to load a given JSON document n-number of times,
+## assigning each document loaded a unique key based on timestamp.
+##
+
+## Source env settings
+. .env
+
+DB=$1
+DOC=$2
+LOAD_COUNT=$3
+COUNTER=0
+START_TIME=`date +'%s'`
+
+## Validate parameters
+if [ -z $DB ] || [ -z $DOC ] || [ -z $LOAD_COUNT ]; then
+    echo "USAGE: test-load [DB] [DOC_NAME] [LOAD_COUNT]"
+    exit 1
+else
+    echo "========================================"
+    echo "                 SETUP"
+    echo "========================================"
+    echo "DB           : "$DB
+    echo "DOC          : "$DOC
+    echo "LOAD_COUNT   : "$LOAD_COUNT
+fi
+
+## Delete the test database (if it exists)
+# ./delete-db $DB
+
+## Create a new, fresh, test database
+./create-db $DB
+
+## Start loading the test document
+while [ $COUNTER -lt $LOAD_COUNT ]; do
+    ./load-doc $DB $DOC >> ./test-load.$START_TIME.log
+    let COUNTER=COUNTER+1
+done
+
+END_TIME=`date +'%s'`
+ELAPSED_TIME=`expr $END_TIME - $START_TIME`
+
+## Prevent divide by zero error
+if [ $ELAPSED_TIME -gt 0 ]; then
+    DOCS_PER_SEC=`expr $LOAD_COUNT / $ELAPSED_TIME`
+else
+    DOCS_PER_SEC=$LOAD_COUNT
+fi
+
+echo "========================================"
+echo "                RESULTS"
+echo "========================================"
+echo "Start            : "$START_TIME
+echo "End              : "$END_TIME
+echo "Elapsed          : "$ELAPSED_TIME" sec"
+echo "Documents loaded : "$LOAD_COUNT
+echo "Load Speed       : "$DOCS_PER_SEC" docs/sec"

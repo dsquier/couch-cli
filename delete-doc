@@ -1,0 +1,22 @@
+#!/bin/bash
+
+##
+## delete-doc
+##
+## Get a JSON document from the specified database by key
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+KEY=$1
+
+## Validate parameters
+if [ -z $KEY ]; then
+    echo "Usage: delete-doc [KEY]"
+    exit 1
+fi
+
+## Get the document
+curl -X DELETE $URL/$DB/$KEY

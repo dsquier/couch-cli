@@ -1,0 +1,24 @@
+#!/bin/bash
+
+##
+## load-design
+##
+## Load a JSON document from a file into a CouchDB _design doc
+##
+## NOTE: This only works if there isn't an existing design doc
+
+## Source env settings
+. .env
+
+## Capture parameters
+DESIGN_DOC=$1
+JSON_FILE=$2
+
+## Validate parameters
+if [ -z $DOC ]; then
+    echo "Usage: load-design [DESIGN_DOC] [JSON_FILE]"
+    exit 1
+fi
+
+## Load the document containing all view definitions
+curl -s -X PUT $URL/$DB/_design/$DESIGN_DOC -d @$JSON_FILE

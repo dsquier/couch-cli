@@ -1,0 +1,22 @@
+#!/bin/bash
+
+##
+## get-filter
+##
+## Get a JSON document containing filters
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+FILTER=$1
+
+## Validate parameters
+if [ -z $FILTER ]; then
+    echo "Usage: get-filter [FILTER_NAME]"
+    exit 1
+fi
+
+## Get the document
+curl -X GET $URL/$DB/_design/$FILTER

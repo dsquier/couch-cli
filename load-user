@@ -1,0 +1,36 @@
+#!/bin/bash
+
+##
+## load-user
+##
+## Load a user-formatted JSON document from a file into the central CouchDB _users database
+##
+## Expected format of DOC (NOTE: org.couchdb.user prefix on doc _id)
+##
+## {
+##   "_id": "org.couchdb.user:username",
+##   "name": "username",
+##   "type": "user",
+##   "roles": [],
+##   "password": "password"
+## }
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+JSON_FILE=$1
+
+## Validate parameters
+if [ -z $JSON_FILE ]; then
+    echo "Usage: load-user [JSON_FILE]"
+    exit 1
+fi
+
+## Extract username from document name
+USERNAME=`echo $JSON_FILE | awk -F. '{print $1}'`
+
+## Load the document containing all view definitions
+echo $URL
+curl -HContent-Type:application/json -XPUT $URL/_users/org.couchdb.user:$USERNAME -d @$JSON_FILE

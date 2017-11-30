@@ -1,0 +1,13 @@
+#!/bin/bash
+
+##
+## set-security
+##
+## Show CouchDB security
+##
+
+## Source env settings
+. .env
+
+## Quick test to ensure there is an active node
+curl -X PUT $URL"/"$DB"/_security"

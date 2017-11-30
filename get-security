@@ -1,0 +1,13 @@
+#!/bin/bash
+
+##
+## get-security
+##
+## Show CouchDB security
+##
+
+## Source env settings
+. .env
+
+## Quick test to ensure there is an active node
+curl $URL"/"$DB"/_security"

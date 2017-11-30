@@ -1,0 +1,30 @@
+#!/bin/bash
+
+##
+## create-replicate
+##
+## Create a new CouchDB replicate document
+##
+## NOTE THIS BUG: https://issues.apache.org/jira/browse/COUCHDB-3235
+## - This seems to occur when using the _replicate endpoint.
+## - The replication persists when POSTing the document to the _replicator db.
+## - THEREFORE, do not use the _replicate endpoint!
+## - Also, ensure the replication doc contains an _id
+
+## Source env settings
+. .env
+
+## Capture parameters
+FILE=$1
+
+## Validate parameters
+if [ -z $FILE ]; then
+    echo "Usage: create-replicate [REPLICATION_FILE]"
+    exit 1
+fi
+
+## Create replication - Bugged version
+curl -H 'Content-Type: application/json' -X POST $URL/_replicate -d @./$FILE
+
+## Create replication - Workaround to post doc directly, bypassing _replicate endpoint
+# curl -s -X PUT $URL/$DB/_design/$DESIGN_DOC -d @$DOC

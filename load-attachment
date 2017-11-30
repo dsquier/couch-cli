@@ -1,0 +1,37 @@
+#!/bin/bash
+
+##
+## load-attachment
+##
+## Load an attachement to an EXISTING document.
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+DOC=$1
+FILE=$2
+
+## Set this based on the type of attachemtn to store
+## NOTE: OpenCRG files use application/octet-stream
+HEADER="Content-Type: application/octet-stream"
+
+## Validate required parameters
+if [ -z $DOC ]; then
+    echo "Usage: load-attachment [KEY] [ATTACHMENT_FILE]"
+    exit 1
+fi
+
+## Calculate the position of the key to extract
+POS=$(($(grep -o "/" <<< "$DOC" | wc -l)+1))
+
+## Compose the key from the filename by removing the path
+## and .json extension and replacing periods with colons
+KEY=`echo $DOC | awk -F.json '{print $1}' | awk -F"/" -v key=$POS '{print $key}' | tr . :`
+
+## Get _rev from the existing document we want to add the attachement to
+REV=`curl -sX GET $URL/$DB/$KEY | awk -F_rev '{print $2}' | awk -F\" '{print $3}'`
+
+## Load the attachment to an existing document
+curl -H """$HEADER""" -X PUT $URL/$DB/$DOC/$FILE?rev=$REV --data-binary @$FILE

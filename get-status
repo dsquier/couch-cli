@@ -1,0 +1,13 @@
+#!/bin/bash
+
+##
+## get-status
+##
+## Checks if CouchDB is running
+##
+
+## Source env settings
+. .env
+
+## Quick test to ensure there is an active node
+curl $URL

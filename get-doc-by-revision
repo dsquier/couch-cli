@@ -1,0 +1,23 @@
+#!/bin/bash
+
+##
+## get-doc-by-revision
+##
+## Get a JSON document from the specified database by key
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+KEY=$1
+REV=$2
+
+## Validate parameters
+if [ -z $KEY ] || [ -z $REV ]; then
+    echo "Usage: get-doc-revision [KEY] [REV]"
+    exit 1
+fi
+
+## Get the document
+curl -sX GET $URL/$DB/$KEY?rev=$REV

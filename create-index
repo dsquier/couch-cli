@@ -1,0 +1,23 @@
+#!/bin/bash
+
+##
+## create-index
+##
+## Create a new CouchDB index
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+FIELDS=$1
+NAME=$2
+
+## Validate parameters
+if [ -z $DB ]; then
+    echo "Usage: create-index [FIELDS] [NAME]"
+    exit 1
+fi
+
+## Create database
+curl -H "Content-Type: application/json" -X POST $URL/$DB/_index -d '{ "index": { "fields": ["'$FIELDS'"] }, "name": "'$NAME'", "type": "json" }'

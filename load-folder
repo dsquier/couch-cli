@@ -1,0 +1,33 @@
+#!/bin/bash
+
+##
+## load-folder
+##
+## Load all *.json documents from a folder into the specified database.
+## The document key will be the same as the filename sans ".json" extension.
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+FOLDER=$1
+
+## Validate parameters
+if [ -z $FOLDER ]; then
+    echo "Usage: load-folder [DB_NAME] [FOLDER_NAME]"
+    exit 1
+fi
+
+## Get list of documents to load
+DOCS=`ls -1 $FOLDER | grep .json$`
+
+for DOC in $DOCS;
+do
+    ## Strip .json extension and convert delimeters from periods to colons
+    KEY=`echo $DOC | gawk -F.json '{ print $1 }' | sed -e 's/\./:/g'`
+
+    ## Load the document
+    # echo "Loading document: "$DOC" with key: "$KEY
+    curl -s -X PUT $URL/$DB/$KEY -d @$FOLDER/$DOC
+done

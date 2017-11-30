@@ -1,0 +1,22 @@
+#!/bin/bash
+
+##
+## delete-db
+##
+## Delete a new CouchDB database
+##
+
+## Source env settings
+. .env
+
+## Capture parameters
+DB_NAME=$1
+
+## Validate parameters
+if [ -z $DB ]; then
+    echo "Usage: delete-db [DB_NAME]"
+    exit 1
+fi
+
+## Delete the database
+curl -X DELETE $URL/$DB_NAME
