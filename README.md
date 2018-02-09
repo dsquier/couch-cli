@@ -2,6 +2,10 @@
 
 Shell scripts, test data, and related files used to manage CouchDB 2.x and above instances.
 
+# Dependencies
+
+- gawk (OS X: brew install gawk)
+
 ## Installing couch-cli scripts
 
 NOTE: These are bash shell scripts and will not work in Windows without the Windows Subsystem for Linux
