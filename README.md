@@ -94,7 +94,19 @@ Run this command
 sudo service couchdb restart
 ```
 
-### 7. Run a backup and confirm it was created
+### 7. Test to confirm Couch is working
+
+The following command run on the server
+```
+ubuntu:/home/ubuntu> curl 127.0.0.1:5984
+```
+
+should produce this output 
+```
+{"couchdb":"Welcome","version":"2.1.1","features":["scheduler"],"vendor":{"name":"The Apache Software Foundation"}}
+```
+
+### 8. Run a backup and confirm it was created
 
 Run this command, then check the corresponding bucket/prefix in the output. You should see this followed by many lines showing the files it is syncing to S3.
 
@@ -107,6 +119,35 @@ ubuntu:/home/ubuntu> /home/ubuntu/cron/couchdb-backup
 | Backing up to         : s3://trd-couchdb/backups/prod/prod-20180209184834
 +------------------------
 ```
+
+### 9. Attach the EC2 instance to the correct Target Group
+
+- Login to the AWS console
+- Open the target group matchign the environment (ex: CouchDBRepprod-TargetGroup)
+- Select the Targets tab
+- Click the Edit button
+- Filter by instance id, then select the proper instance
+- Click the "Add to registered" button
+- Click the "Save" button
+- Wait for the Status of the registered target to change to "healthy"
+- Do a GET request to the ALB endpoint to confirm the response matches Step 7 above.
+- Ex: http://cfnalbchassistunerdb-prod-1500121724.us-west-2.elb.amazonaws.com:5984/ should return 
+```
+{
+  "couchdb": "Welcome",
+  "version": "2.1.1",
+  "features": [
+    "scheduler"
+  ],
+  "vendor": {
+    "name": "The Apache Software Foundation"
+  }
+}
+```
+
+### 10. Create a username/password 
+
+TBD
 
 ---
 ## Creating a CouchDB AMI
