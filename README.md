@@ -52,13 +52,13 @@ Then, add/edit the following line:
 fs-<EFS-ID>.efs.us-west-2.amazonaws.com:/ /efs nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0
 ```
 
-- Edit the CouchDB local configuration to point to the EFS filesystem
+- To edit the CouchDB local configuration to point to the EFS filesystem
 
 ```
 sudo vi /opt/couchdb/etc/local.d/10-admins.ini
 ```
 
-Then, add the following two lines under the `[couchdb]` heading
+Add the following two lines under the `[couchdb]` heading
 
 ```
 database_dir = /efs/couchdb
@@ -78,6 +78,34 @@ Add the following line to crontab:
 
 ```
 20 8 * * * /home/ubuntu/cron/couchdb-backup >> /home/ubuntu/cron/couchdb-backup.log
+```
+
+### 5. Mount the EFS voluem
+
+Run this command
+```
+sudo mount -a
+```
+
+### 6. Restart Couchdb
+
+Run this command
+```
+sudo service couchdb restart
+```
+
+### 7. Run a backup and confirm it was created
+
+Run this command, then check the corresponding bucket/prefix in the output. You should see this followed by many lines showing the files it is syncing to S3.
+
+```
+ubuntu:/home/ubuntu> /home/ubuntu/cron/couchdb-backup 
++------------------------
+| BACKUP STARTED        : Fri Feb 9 18:48:34 UTC 2018
++------------------------
+| Backing up from       : /efs/couchdb
+| Backing up to         : s3://trd-couchdb/backups/prod/prod-20180209184834
++------------------------
 ```
 
 ---
